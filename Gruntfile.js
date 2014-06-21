@@ -1,96 +1,99 @@
 /*global module:false*/
 module.exports = function(grunt) {
-    
+
     grunt.initConfig({
-        
+
         pkg: grunt.file.readJSON('package.json'),
-        banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-        '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-        '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-        '* Copyright (c) <%= grunt.template.today("yyyy") %>;' +
-        ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
-        
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+
         clean: ["pkg/"],
-        
+
         env : {
             options : {
-                /* Shared Options Hash */
-                //globalOption : 'foo'  
             },
             dev: {
                 NODE_ENV : 'DEVELOPMENT'
             },
             prod : {
                 NODE_ENV : 'PRODUCTION'   
-            }  
-        },
-        
-        copy: {
-            css: {
-                src: 'site/css/*',
-                dest: 'pkg/',
-            },
-            files: {
-                src: 'site/files/*',
-                dest: 'pkg/',
-            },
-            font: {
-                src: 'site/font/*',
-                dest: 'pkg/',
-            },
-            js: {
-                src: 'site/js/*',
-                dest: 'pkg/',
-            },
-            favicon: {
-                src: 'site/favicon.ico',
-                dest: 'pkg/',
-            },
-            cv: {
-                src: 'site/index.html',
-                dest: 'pkg/',
             }
         },
-        
-        /*preprocess : {
-            dev : {
-                src : 'app/index-master.html',
-                dest : 'app/index.html'  
-            },
-            prod : {
-                src : 'app/index-master.html',
-                dest : 'pkg/app/index.html',
-            }   
-        },*/
-        
+
+        bump: {
+            options: {
+                commit: false,
+                createTag: false,
+                push: false
+            }
+        },
+
         imagemin: {
             dynamic: {
                 files: [{
                     expand: true,
-                    cwd: 'site/',
+                    cwd: 'public/',
                     src: ['**/*.{png,jpg,gif}'],
-                    dest: 'pkg/site/'
+                    dest: 'pkg/public'
                 }]
             }
         },
-        
-        cssmin: {
-            combine: {
-                files: {
-                    'pkg/site/css/cv.min.css': [
-                        'site/css/cv.css'
-                    ]
-                }
+
+        copy: {
+            package: {
+                src: 'package.json',
+                dest: 'pkg/',
+            },
+            server1: {
+                src: 'app.js',
+                dest: 'pkg/',
+            },
+            server2: {
+                src: 'views/**/*',
+                dest: 'pkg/',
+            },
+            server3: {
+                src: 'public/css/*',
+                dest: 'pkg/',
+            },
+            //            server4: {
+            //                src: 'public/docs/*',
+            //                dest: 'pkg/',
+            //            },
+            server5: {
+                src: 'public/js/*',
+                dest: 'pkg/',
+            },
+            server6: {
+                src: 'public/favicon.ico',
+                dest: 'pkg/',
+            },
+            server7: {
+                src: 'public/favicon.png',
+                dest: 'pkg/',
             }
-        }
+        },
+
+        'sftp-deploy': {
+            prod: {
+                auth: {
+                    host: '91.121.177.78',
+                    port: 22,
+                    authKey: 'prod'
+                },
+                src: 'pkg',
+                dest: '/home/GsellMe-prod/GsellMe',
+                exclusions: ['pkg/package.json', 'pkg/server/*'],
+                server_sep: '/'
+            }
+        },
     });
-    
+
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-env');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-preprocess');
+    grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-imagemin');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    
-    grunt.registerTask('default', ['clean', 'env:dev', 'copy', 'imagemin', 'cssmin']);
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-sftp-deploy');
+
+    grunt.registerTask('prod', ['env:prod', 'clean', 'bump', 'imagemin', 'copy', 'sftp-deploy:prod']);
 };
