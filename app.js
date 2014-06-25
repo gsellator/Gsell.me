@@ -16,10 +16,10 @@ app.get('/', function(req, res) {
     }
 });
 
-//app.get('/projects', function(req, res) {
-//    res.render('projects.ejs');
-//});
-//
+app.get('/projects', function(req, res) {
+    res.render('projects.ejs');
+});
+
 //app.get('/docs', function(req, res) {
 //    res.render('docs.ejs');
 //});
