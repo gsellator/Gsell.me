@@ -1,3 +1,4 @@
+*.DS_Store
 illu/
 node_modules/
 pkg/
