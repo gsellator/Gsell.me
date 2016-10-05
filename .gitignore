@@ -5,3 +5,5 @@ pkg/
 .ftppass
 min/
 start.sh
+
+npm-debug.log
