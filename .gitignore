@@ -1,9 +1,4 @@
 *.DS_Store
-illu/
 node_modules/
-pkg/
-.ftppass
-min/
-start.sh
-
+.sass-cache/
 npm-debug.log

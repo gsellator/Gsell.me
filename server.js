@@ -10,8 +10,6 @@ server.use(bodyParser.json());
 
 //Routes
 server.get('/', function(req, res) { res.render('index.ejs'); });
-//server.get('/projects', function(req, res) { res.render('projects.ejs'); });
-//server.get('/docs', function(req, res) { res.render('docs.ejs'); });
 
 server.use(function(req, res, next){
     res.setHeader('Content-Type', 'text/plain');
